@@ -11,7 +11,7 @@ namespace Hero_Adventure
         public int hitPoints;
         public int maximumHitPoints;
         public int attackPower;
-        Tile[] vision;
+        public Tile[] vision;
         public bool isDead;
 
         public Position characterPosition;

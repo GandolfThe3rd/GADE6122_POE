@@ -13,7 +13,7 @@ namespace Hero_Adventure
         private int width;
         private int height;
         private Random random = new Random();
-        HeroTile hero;
+        public HeroTile hero;
 
         public int Width
         {
@@ -160,11 +160,31 @@ namespace Hero_Adventure
             get { return hero; }
         }
 
+        public void SwopTiles(Tile object1, Tile object2)
+        {
+            Tile tempTile = null;
 
+            tempTile = object1;
+            tempTile.X = object2.X;
+            tempTile.Y = object2.Y;
 
-        //public void SetTiles(int aH, int aW, Tile thing)
-        //{
-        //    tiles[aH, aW] = thing;
-        //}
+            object1 = object2;
+            object1.X = object2.X;
+            object1.Y = object2.Y;
+
+            object2 = tempTile;
+            object2.X = tempTile.X;
+            object2.Y = tempTile.Y;
+
+        }
+
+        public enum Direction
+        {
+            Up,
+            Right,
+            Down,
+            Left,
+            None
+        }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Hero_Adventure
 {
-    internal class GameEngine
+    public class GameEngine
     {
         private Level level;
         private int noOfLevels;
@@ -32,5 +33,29 @@ namespace Hero_Adventure
         {
             return level.ToString();
         }
+
+        private bool MoveHero(Level.Direction aDirection)
+        {
+            int theDirection = Convert.ToInt32(aDirection);
+
+            Tile targetTile = level.hero.vision[theDirection];
+            if (targetTile is EmptyTile)
+            {
+                level.SwopTiles(level.hero, targetTile);
+                level.hero.UpdateVision(level);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void TriggerMovement(Level.Direction aDirection)
+        {
+            MoveHero(aDirection);
+        }
+
     }
 }

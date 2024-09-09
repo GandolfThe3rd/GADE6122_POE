@@ -32,5 +32,28 @@ namespace Hero_Adventure
             lblDisplay.Text = engine.ToString();
         }
 
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            engine.TriggerMovement(Level.Direction.Up);
+            UpdateDisplay();
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            engine.TriggerMovement(Level.Direction.Right);
+            UpdateDisplay();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            engine.TriggerMovement(Level.Direction.Down);
+            UpdateDisplay();
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            engine.TriggerMovement(Level.Direction.Left);
+            UpdateDisplay();
+        }
     }
 }
