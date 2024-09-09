@@ -14,6 +14,7 @@ namespace Hero_Adventure
         private int height;
         private Random random = new Random();
         public HeroTile hero;
+        public ExitTile exit;
 
         public int Width
         {
@@ -49,13 +50,21 @@ namespace Hero_Adventure
                 tiles[randomPlace.Y, randomPlace.X] = aHero;
                 hero = aHero;
             }
+
+            randomPlace = GetRandomEmptyPosition();
+            CreateTile(TileType.Exit, randomPlace);
+            exit = new ExitTile(randomPlace);
+            exit.X = randomPlace.X;
+            exit.Y = randomPlace.Y;
+
         }
 
         public enum TileType
         {
             Empty,
             Wall,
-            Hero
+            Hero,
+            Exit
         }
 
         private Tile CreateTile(TileType aTileType, Position aPosition)
@@ -81,6 +90,13 @@ namespace Hero_Adventure
                         tiles[aPosition.Y, aPosition.X] = tile;
                         return tile;
                     }
+                case TileType.Exit:
+                    {
+                        tile = new ExitTile(aPosition);
+                        tiles[aPosition.Y, aPosition.X] = tile;
+                        return tile;
+                    }
+
                 default:
                     {
                         tile = new EmptyTile(aPosition);
@@ -146,7 +162,7 @@ namespace Hero_Adventure
                 temp1 = random.Next(0, Height);
                 temp2 = random.Next(0, Width);
 
-                if (tiles[temp1, temp2].Display == Convert.ToChar("▯"))
+                if (tiles[temp1, temp2] is EmptyTile) // if (tiles[temp1, temp2].Display == Convert.ToChar("▯")) || Old code just in case
                 {
                     value = new Position(temp2, temp1);
                     return value;
@@ -186,5 +202,8 @@ namespace Hero_Adventure
             Left,
             None
         }
+
+        public ExitTile Exit
+        { get { return exit; } }
     }
 }

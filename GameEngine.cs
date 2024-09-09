@@ -13,8 +13,12 @@ namespace Hero_Adventure
         private int noOfLevels;
         private Random random;
 
+        private int currentLevel;
+
         const int MIN_SIZE = 10;
         const int MAX_SIZE = 20;
+
+        GameState gameState = GameState.InProgress;
 
         public GameEngine(int aNoOfLevels)
         {
@@ -31,7 +35,22 @@ namespace Hero_Adventure
 
         public override string ToString()
         {
-            return level.ToString();
+            switch(gameState)
+            {
+                case GameState.Compleate:
+                    {
+                        return "Congradulation, You Have Compleated The Game!";
+                    }
+                case GameState.InProgress:
+                    {
+
+                        return level.ToString();
+                    }
+                default:
+                    {
+                        return "";
+                    }
+            }
         }
 
         private bool MoveHero(Level.Direction aDirection)
@@ -39,7 +58,18 @@ namespace Hero_Adventure
             int theDirection = Convert.ToInt32(aDirection);
 
             Tile targetTile = level.hero.vision[theDirection];
-            if (targetTile is EmptyTile)
+
+            if (targetTile is ExitTile && currentLevel == noOfLevels)
+            {
+                gameState = GameState.Compleate;
+                return false;
+            }
+            else if(targetTile is ExitTile)
+            {
+                NextLevel();
+                return true;
+            }
+            else if (targetTile is EmptyTile)
             {
                 level.SwopTiles(level.hero, targetTile);
                 level.hero.UpdateVision(level);
@@ -57,5 +87,25 @@ namespace Hero_Adventure
             MoveHero(aDirection);
         }
 
+        public enum GameState
+        {
+            InProgress,
+            Compleate,
+            GameOver
+        }
+
+        public void NextLevel()
+        {
+            currentLevel++;
+
+            int tempW;
+            int tempH;
+            HeroTile tempHero;
+            tempHero = level.hero;
+
+            tempW = random.Next(MAX_SIZE, MAX_SIZE);
+            tempH = random.Next(MAX_SIZE, MAX_SIZE);
+            level = new Level(tempH, tempW, tempHero);
+        }
     }
 }
