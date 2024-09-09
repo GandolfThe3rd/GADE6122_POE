@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,47 +12,80 @@ namespace Hero_Adventure
         private Tile[,] tiles;
         private int width;
         private int height;
+        private Random random = new Random();
+        HeroTile hero;
 
         public int Width
-        { 
+        {
             get { return width; }
-            set {  width = value; } 
+            set { width = value; }
         }
         public int Height
-        { 
+        {
             get { return height; }
-            set { height = value; } 
+            set { height = value; }
         }
 
-        public Level(int width, int height)
+        public Level(int width, int height, HeroTile aHero = null)
         {
+            Position randomPlace;
+
             Width = width;
             Height = height;
 
             tiles = new Tile[Height, Width];
             InitialiseTiles();
+
+            randomPlace = GetRandomEmptyPosition();
+            
+            if (aHero == null)
+            {
+                CreateTile(TileType.Hero, randomPlace);
+                hero = aHero;
+            }
+            else
+            {
+                aHero.characterPosition = randomPlace;
+                tiles[randomPlace.Y, randomPlace.X] = aHero;
+                hero = aHero;
+            }
         }
 
         public enum TileType
         {
-            Empty
+            Empty,
+            Wall,
+            Hero
         }
 
         private Tile CreateTile(TileType aTileType, Position aPosition)
         {
-            switch(aTileType)
+            Tile tile;
+            switch (aTileType)
             {
                 case TileType.Empty:
                     {
-                        EmptyTile emptytile = new EmptyTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = emptytile;
-                        return emptytile;
+                        tile = new EmptyTile(aPosition);
+                        tiles[aPosition.Y, aPosition.X] = tile;
+                        return tile;
+                    }
+                case TileType.Wall:
+                    {
+                        tile = new WallTile(aPosition);
+                        tiles[aPosition.Y, aPosition.X] = tile;
+                        return tile;
+                    }
+                case TileType.Hero:
+                    {
+                        tile = new HeroTile(aPosition);
+                        tiles[aPosition.Y, aPosition.X] = tile;
+                        return tile;
                     }
                 default:
                     {
-                        EmptyTile emptytile = new EmptyTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = emptytile;
-                        return emptytile;
+                        tile = new EmptyTile(aPosition);
+                        tiles[aPosition.Y, aPosition.X] = tile;
+                        return tile;
                     }
             }
         }
@@ -64,27 +98,73 @@ namespace Hero_Adventure
 
         public void InitialiseTiles()
         {
-            for (int h = 0; h < width; h++)
+            for (int h = 0; h < Width; h++)
             {
-                for (int w = 0; w < height; w++)
+                for (int w = 0; w < Height; w++)
                 {
-                    CreateTile(TileType.Empty, w, h);
+                    if (w == 0 | w == Width - 1 | h == 0 | h == Height - 1)
+                    {
+                        CreateTile(TileType.Wall, w, h);
+                    }
+                    else
+                    {
+                        CreateTile(TileType.Empty, w, h);
+                    }
                 }
             }
         }
 
         public override string ToString()
         {
-            for (int h = 0; h < width; h++)
+            string map = "";
+
+            for (int h = 0; h < Width; h++)
             {
-                for (int w = 0; w < height; w++)
+                for (int w = 0; w < Height; w++)
                 {
-                    Console.Write(tiles[h,w].Display + " ");
+                    map += tiles[h, w].Display;
                 }
-                Console.Write("\n");
+                map += "\n";
             }
 
-            return ""; // Fix This --------------------------------------------------------------------
+            return map;
         }
+
+        public Tile GetTiles(int aH, int aW)
+        {
+            return tiles[aH, aW];
+        }
+
+        private Position GetRandomEmptyPosition()
+        {
+            Position value = null;
+            int temp1;
+            int temp2;
+
+            while (value == null)
+            {
+                temp1 = random.Next(0, Height);
+                temp2 = random.Next(0, Width);
+
+                if (tiles[temp1, temp2].Display == Convert.ToChar("▯"))
+                {
+                    value = new Position(temp2, temp1);
+                    return value;
+                }
+            }
+            return value;
+        }
+
+        public HeroTile Hero
+        {
+            get { return hero; }
+        }
+
+
+
+        //public void SetTiles(int aH, int aW, Tile thing)
+        //{
+        //    tiles[aH, aW] = thing;
+        //}
     }
 }

@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Hero_Adventure
 {
-    public class EmptyTile : Tile
+    public class WallTile : Tile
     {
-        public EmptyTile(Position aPosition) : base(aPosition)
+        public WallTile(Position aPosition) : base(aPosition)
         {
-            
+
         }
 
         public override char Display
         {
-            get { return Convert.ToChar("▯"); }
+            get { return Convert.ToChar("▮"); }
         }
     }
 }

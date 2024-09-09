@@ -21,9 +21,11 @@ namespace Hero_Adventure
             int tempH;
 
             noOfLevels = aNoOfLevels;
-            tempW = random.Next(MIN_SIZE, MAX_SIZE);
-            tempH = random.Next(MIN_SIZE, MAX_SIZE);
-            Level level = new Level(tempW, tempH);
+            random = new Random();
+            tempW = random.Next(MAX_SIZE, MAX_SIZE);
+            tempH = random.Next(MAX_SIZE, MAX_SIZE);
+            level = new Level(tempH, tempW);
+            // Fix this --------------------------------------------------------------------------------------------------------
         }
 
         public override string ToString()
