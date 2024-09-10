@@ -21,7 +21,7 @@ namespace Hero_Adventure
                 {
                     case false:
                         {
-                            return Convert.ToChar("▽");
+                            return Convert.ToChar("▼");
                         }
                     default:
                         {

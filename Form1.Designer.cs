@@ -33,6 +33,7 @@
             this.btnDown = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
+            this.lblCoords = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblDisplay
@@ -85,11 +86,21 @@
             this.btnRight.UseVisualStyleBackColor = true;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
+            // lblCoords
+            // 
+            this.lblCoords.AutoSize = true;
+            this.lblCoords.Location = new System.Drawing.Point(768, 71);
+            this.lblCoords.Name = "lblCoords";
+            this.lblCoords.Size = new System.Drawing.Size(50, 13);
+            this.lblCoords.TabIndex = 5;
+            this.lblCoords.Text = "lblCoords";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(951, 592);
+            this.Controls.Add(this.lblCoords);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.btnDown);
@@ -110,6 +121,7 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnRight;
+        private System.Windows.Forms.Label lblCoords;
     }
 }
 

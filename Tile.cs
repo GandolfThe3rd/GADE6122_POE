@@ -15,11 +15,16 @@ namespace Hero_Adventure
             get { return position.X; }
             set { position.X = value; }
         }
-
+        
+        public Position Position
+        {
+            get { return this.position; }
+            set { position = value; }
+        }
         public int Y
         {
-            get { return position.X; }
-            set { position.X = value; }
+            get { return position.Y; }
+            set { position.Y = value; }
         }
 
         public Tile(Position aPosition)

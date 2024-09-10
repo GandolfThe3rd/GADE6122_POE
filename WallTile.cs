@@ -15,7 +15,7 @@ namespace Hero_Adventure
 
         public override char Display
         {
-            get { return Convert.ToChar("▮"); }
+            get { return Convert.ToChar("█"); }
         }
     }
 }

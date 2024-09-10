@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -20,6 +21,9 @@ namespace Hero_Adventure
 
         GameState gameState = GameState.InProgress;
 
+        // Temporary
+        public string coords;
+
         public GameEngine(int aNoOfLevels)
         {
             int tempW;
@@ -27,19 +31,18 @@ namespace Hero_Adventure
 
             noOfLevels = aNoOfLevels;
             random = new Random();
-            tempW = random.Next(MAX_SIZE, MAX_SIZE);
-            tempH = random.Next(MAX_SIZE, MAX_SIZE);
+            tempW = random.Next(MIN_SIZE, MAX_SIZE);
+            tempH = random.Next(MIN_SIZE, MAX_SIZE);
             level = new Level(tempH, tempW);
-            // Fix this --------------------------------------------------------------------------------------------------------
         }
 
         public override string ToString()
         {
             switch(gameState)
             {
-                case GameState.Compleate:
+                case GameState.Complete:
                     {
-                        return "Congradulation, You Have Compleated The Game!";
+                        return "Congratulations, You Have Completed The Game!";
                     }
                 case GameState.InProgress:
                     {
@@ -53,15 +56,16 @@ namespace Hero_Adventure
             }
         }
 
-        private bool MoveHero(Level.Direction aDirection)
+        private bool MoveHero(Direction aDirection)
         {
-            int theDirection = Convert.ToInt32(aDirection);
-
-            Tile targetTile = level.hero.vision[theDirection];
+            Tile targetTile = level.hero.vision[(int)aDirection];
+            
+            //targetTile.X = targetTile.X;
+            //targetTile.Y = targetTile.Y;
 
             if (targetTile is ExitTile && currentLevel == noOfLevels)
             {
-                gameState = GameState.Compleate;
+                gameState = GameState.Complete;
                 return false;
             }
             else if(targetTile is ExitTile)
@@ -82,15 +86,19 @@ namespace Hero_Adventure
             }
         }
 
-        public void TriggerMovement(Level.Direction aDirection)
+        public void TriggerMovement(Direction aDirection)
         {
+            level.hero.UpdateVision(level);
             MoveHero(aDirection);
+            //level.hero.UpdateVision(level);
+
+            coords = $"X:{level.hero.X}\nY:{level.hero.Y}";
         }
 
         public enum GameState
         {
             InProgress,
-            Compleate,
+            Complete,
             GameOver
         }
 
@@ -107,5 +115,16 @@ namespace Hero_Adventure
             tempH = random.Next(MAX_SIZE, MAX_SIZE);
             level = new Level(tempH, tempW, tempHero);
         }
+
+        public enum Direction
+        {
+            Up,
+            Right,
+            Down,
+            Left,
+            None
+        }
     }
+
+    
 }

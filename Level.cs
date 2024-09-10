@@ -4,12 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace Hero_Adventure
 {
     public class Level
     {
-        private Tile[,] tiles;
+        public Tile[,] tiles;
         private int width;
         private int height;
         private Random random = new Random();
@@ -34,7 +35,7 @@ namespace Hero_Adventure
             Width = width;
             Height = height;
 
-            tiles = new Tile[Height, Width];
+            tiles = new Tile[Width, Height];
             InitialiseTiles();
 
             randomPlace = GetRandomEmptyPosition();
@@ -42,13 +43,15 @@ namespace Hero_Adventure
             if (aHero == null)
             {
                 CreateTile(TileType.Hero, randomPlace);
-                hero = aHero;
+                aHero = new HeroTile(randomPlace);
+                this.hero = aHero;
             }
             else
             {
                 aHero.characterPosition = randomPlace;
-                tiles[randomPlace.Y, randomPlace.X] = aHero;
-                hero = aHero;
+                aHero = new HeroTile(randomPlace);
+                tiles[randomPlace.X, randomPlace.Y] = aHero;
+                this.hero = aHero;
             }
 
             randomPlace = GetRandomEmptyPosition();
@@ -69,54 +72,53 @@ namespace Hero_Adventure
 
         private Tile CreateTile(TileType aTileType, Position aPosition)
         {
-            Tile tile;
             switch (aTileType)
             {
                 case TileType.Empty:
                     {
-                        tile = new EmptyTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = tile;
+                        EmptyTile tile = new EmptyTile(aPosition);
+                        tiles[aPosition.X, aPosition.Y] = tile;
                         return tile;
                     }
                 case TileType.Wall:
                     {
-                        tile = new WallTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = tile;
+                        WallTile tile = new WallTile(aPosition);
+                        tiles[aPosition.X, aPosition.Y] = tile;
                         return tile;
                     }
                 case TileType.Hero:
                     {
-                        tile = new HeroTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = tile;
+                        HeroTile tile = new HeroTile(aPosition);
+                        tiles[aPosition.X, aPosition.Y] = tile;
                         return tile;
                     }
                 case TileType.Exit:
                     {
-                        tile = new ExitTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = tile;
+                        ExitTile tile = new ExitTile(aPosition);
+                        tiles[aPosition.X, aPosition.Y] = tile;
                         return tile;
                     }
 
                 default:
                     {
-                        tile = new EmptyTile(aPosition);
-                        tiles[aPosition.Y, aPosition.X] = tile;
+                        EmptyTile tile = new EmptyTile(aPosition);
+                        tiles[aPosition.X, aPosition.Y] = tile;
                         return tile;
                     }
             }
         }
 
-        private void CreateTile(TileType aTileType, int aX, int aY)
+        private Tile CreateTile(TileType aTileType, int aX, int aY)
         {
             Position position = new Position(aX, aY);
-            CreateTile(aTileType, position);
+            return CreateTile(aTileType, position);
         }
 
         public void InitialiseTiles()
         {
-            for (int h = 0; h < Width; h++)
+            for (int h = 0; h < Height; h++)
             {
-                for (int w = 0; w < Height; w++)
+                for (int w = 0; w < Width; w++)
                 {
                     if (w == 0 | w == Width - 1 | h == 0 | h == Height - 1)
                     {
@@ -134,11 +136,11 @@ namespace Hero_Adventure
         {
             string map = "";
 
-            for (int h = 0; h < Width; h++)
+            for (int h = 0; h < Height; h++)
             {
-                for (int w = 0; w < Height; w++)
+                for (int w = 0; w < Width; w++)
                 {
-                    map += tiles[h, w].Display;
+                    map += tiles[w, h].Display.ToString();
                 }
                 map += "\n";
             }
@@ -146,9 +148,10 @@ namespace Hero_Adventure
             return map;
         }
 
-        public Tile GetTiles(int aH, int aW)
+        public Tile[,] Tiles
         {
-            return tiles[aH, aW];
+            get { return tiles; }
+
         }
 
         private Position GetRandomEmptyPosition()
@@ -162,7 +165,7 @@ namespace Hero_Adventure
                 temp1 = random.Next(0, Height);
                 temp2 = random.Next(0, Width);
 
-                if (tiles[temp1, temp2] is EmptyTile) // if (tiles[temp1, temp2].Display == Convert.ToChar("▯")) || Old code just in case
+                if (tiles[temp2, temp1] is EmptyTile) // if (tiles[temp1, temp2].Display == Convert.ToChar("▯")) || Old code just in case
                 {
                     value = new Position(temp2, temp1);
                     return value;
@@ -178,32 +181,30 @@ namespace Hero_Adventure
 
         public void SwopTiles(Tile object1, Tile object2)
         {
-            Tile tempTile = null;
+            Tile tempTile1 = object1;
+            Tile tempTile2 = object2;
 
-            tempTile = object1;
-            tempTile.X = object2.X;
-            tempTile.Y = object2.Y;
+            object1.X = tempTile2.X; // Object 1 becomes Object 2
+            object1.Y = tempTile2.Y;
+            object1 = tempTile2;
 
-            object1 = object2;
-            object1.X = object2.X;
-            object1.Y = object2.Y;
+            object2.X = tempTile1.X; // Object 2 becomes the Temp Tile (which was Object 1)
+            object2.Y = tempTile1.Y;
+            object2 = tempTile1;
 
-            object2 = tempTile;
-            object2.X = tempTile.X;
-            object2.Y = tempTile.Y;
-
+            tiles[object1.X, object1.Y] = object1;
+            tiles[object2.X, object2.Y] = object2;
         }
 
-        public enum Direction
-        {
-            Up,
-            Right,
-            Down,
-            Left,
-            None
-        }
+        
 
         public ExitTile Exit
         { get { return exit; } }
+
+        public HeroTile HeroTile
+        {
+            get { return hero; }
+            set { hero = value; }
+        }
     }
 }

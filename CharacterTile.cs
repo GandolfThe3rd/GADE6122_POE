@@ -28,10 +28,14 @@ namespace Hero_Adventure
 
         public void UpdateVision(Level aLevel)
         {
-            vision[0] = aLevel.GetTiles(characterPosition.Y - 1,characterPosition.X);
-            vision[1] = aLevel.GetTiles(characterPosition.Y,characterPosition.X + 1);
-            vision[2] = aLevel.GetTiles(characterPosition.Y + 1,characterPosition.X);
-            vision[3] = aLevel.GetTiles(characterPosition.Y,characterPosition.X - 1);
+            vision[0] = aLevel.tiles[characterPosition.X, characterPosition.Y - 1]; // 0
+            vision[1] = aLevel.tiles[characterPosition.X + 1, characterPosition.Y]; // 1
+            vision[2] = aLevel.tiles[characterPosition.X, characterPosition.Y + 1]; // 2
+            vision[3] = aLevel.tiles[characterPosition.X - 1, characterPosition.Y]; // 3
+
+            //      0
+            //  3   C   1
+            //      2
         }
 
         public void TakeDamage(int incomingDamage)
